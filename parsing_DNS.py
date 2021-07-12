@@ -24,6 +24,7 @@ class Parsing:
         self.option.add_argument("--headless")
         self.option.add_argument(f"user-agent={USER_AGENT}")
         self.page_count = int()
+        self.items = []
         self.pages_url = []
 
     def run(self):
@@ -32,6 +33,7 @@ class Parsing:
             self.create_pages_url()
             p = Pool(self.page_count)
             p.map(self.give_info_with_page, self.pages_url)
+            self.write_to_bd()
             time.sleep(120)
 
     def give_page_count(self):
@@ -39,7 +41,7 @@ class Parsing:
         try:
             driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=self.option)
             driver.get(FIRST_PARSING_PAGE)
-            driver.implicitly_wait(3)
+            driver.implicitly_wait(5)
             self.page_count = int(driver.find_elements_by_class_name('pagination-widget__page ')[-1].
                                   get_attribute('data-page-number'))
         except Exception as ex:
@@ -52,7 +54,6 @@ class Parsing:
         for number_page in range(1, self.page_count + 1):
             self.pages_url.append(FIRST_PARSING_PAGE[:-1] + str(number_page))
 
-    @db_session
     def give_info_with_page(self, url=FIRST_PARSING_PAGE):
         try:
             driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=self.option)
@@ -72,19 +73,31 @@ class Parsing:
                     price_item = item.find_element_by_class_name("product-buy__price").text.replace(" ", '')[:-1]
                 except:
                     price_item = "Нет цены"
-                item_in_db = DNSModels.get(url=href)
-                if not item_in_db:
-                    self.send_mail(href, name_item, price_item)
-                    DNSModels(url=href, name=name_item, price=price_item)
-                else:
-                    if item_in_db.price != price_item:
-                        self.send_mail(href, name_item, price_item)
-                        DNSModels(url=href, name=name_item, price=price_item)
+                item_info = {"url": href,
+                             "name": name_item,
+                             "price": price_item}
+                self.items.append(item_info)
         except Exception as ex:
             print(ex)
         finally:
             driver.close()
             driver.quit()
+
+    @db_session
+    def write_to_bd(self):
+        for item in self.items:
+            url = item["url"]
+            name = item["name"]
+            price = item["price"]
+            item_in_db = DNSModels.get(url=url)
+            if not item_in_db:
+                self.send_mail(url, name, price)
+                DNSModels(url=url, name=name, price=price)
+            else:
+                if item_in_db.price != price:
+                    self.send_mail(url, name, price)
+                    DNSModels(url=url, name=name, price=price)
+
 
     def send_mail(self, url, name, price):
         massage = f"NEW {name}, по цене {price}, адрес {url}"
