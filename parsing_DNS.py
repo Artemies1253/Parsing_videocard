@@ -13,7 +13,7 @@ MAIN_URL = "https://www.dns-shop.ru/"
 FIRST_PARSING_PAGE = 'https://www.dns-shop.ru/catalog/17a89aab16404e77/videokarty/?p=1'
 BASE_DIRE = os.path.dirname(os.path.abspath(__file__))
 CHROME_DRIVER = os.path.join(BASE_DIRE, "chrome") + '\chromedriver.exe'
-USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"\
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" \
              " AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
 
 
@@ -97,7 +97,6 @@ class Parsing:
                 if item_in_db.price != price:
                     self.send_mail(url, name, price)
                     DNSModels(url=url, name=name, price=price)
-
 
     def send_mail(self, url, name, price):
         massage = f"NEW {name}, по цене {price}, адрес {url}"
