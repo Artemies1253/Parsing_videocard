@@ -12,6 +12,8 @@ MAIN_URL = "https://www.dns-shop.ru/"
 FIRST_PARSING_PAGE = 'https://www.dns-shop.ru/catalog/17a89aab16404e77/videokarty/?p=1'
 BASE_DIRE = os.path.dirname(os.path.abspath(__file__))
 CHROME_DRIVER = os.path.join(BASE_DIRE, "chrome") + '\chromedriver.exe'
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"\
+             " AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
 
 
 class Parsing:
@@ -19,8 +21,7 @@ class Parsing:
         self.option = webdriver.ChromeOptions()
         self.option.add_argument("--disable-blink-features=AutomationControlled")
         self.option.add_argument("--headless")
-        self.option.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-                                 " AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+        self.option.add_argument(f"user-agent={USER_AGENT}")
         self.page_count = int()
         self.pages_url = []
 
