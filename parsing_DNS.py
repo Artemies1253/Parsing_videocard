@@ -7,6 +7,7 @@ from models import DNSModels
 from send_messang import send_massage
 from multiprocessing import Pool
 import logging
+import time
 
 MAIN_URL = "https://www.dns-shop.ru/"
 FIRST_PARSING_PAGE = 'https://www.dns-shop.ru/catalog/17a89aab16404e77/videokarty/?p=1'
@@ -26,10 +27,12 @@ class Parsing:
         self.pages_url = []
 
     def run(self):
-        self.give_page_count()
-        self.create_pages_url()
-        p = Pool(self.page_count)
-        p.map(self.give_info_with_page, self.pages_url)
+        while True:
+            self.give_page_count()
+            self.create_pages_url()
+            p = Pool(self.page_count)
+            p.map(self.give_info_with_page, self.pages_url)
+            time.sleep(120)
 
     def give_page_count(self):
         """Заполняет self.page_count количество страниц"""
