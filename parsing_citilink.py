@@ -10,7 +10,6 @@ from send_messang import send_massage
 from fake_useragent import UserAgent
 import time
 
-
 USER_AGENT = UserAgent().chrome
 MAIN_URL = "https://www.citilink.ru"
 FIRST_PARSING_PAGE = 'https://www.citilink.ru/catalog/videokarty/?f=discount.any&price_min=30000p=1'
@@ -32,11 +31,10 @@ class Parser:
         responce = requests.get(self.main_url, headers={'user-agent': USER_AGENT})
         html_doc = BeautifulSoup(responce.content, features="html.parser")
         video_cards_info = html_doc.find_all("div", {"class": "product_data__gtm-js"
-                                                    " product_data__pageevents-js ProductCardHorizontal"
-                                                    " js--ProductCardInListing js--ProductCardInWishlist"})
+                                                              " product_data__pageevents-js ProductCardHorizontal"
+                                                              " js--ProductCardInListing js--ProductCardInWishlist"})
         self.parsing_page(video_cards_info=video_cards_info)
         self.chek_next_page(html_doc)
-
 
     def parsing_page(self, video_cards_info):
         for video_card_info in video_cards_info:
@@ -70,6 +68,8 @@ class Parser:
 
 
 log = logging.getLogger('log_parsing')
+
+
 def logging_configurate():
     file_handler = logging.FileHandler(filename="log_messege.txt", encoding="utf-8", mode="a")
     formater_for_file_write = logging.Formatter("%(asctime)s %(levelname)s %(message)s", "%d-%m-%Y %H:%M")

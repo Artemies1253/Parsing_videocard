@@ -26,5 +26,9 @@ class RegardURL(db.Entity):
     price = Required(str)
 
 
+class DNSModels(db.Entity):
+    url = Required(str)
+    name = Required(str)
+    price = Required(str)
 db.generate_mapping(create_tables=True)
 # db.drop_all_tables(with_all_data=True)

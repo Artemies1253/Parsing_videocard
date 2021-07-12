@@ -10,10 +10,10 @@ from send_messang import send_massage
 from fake_useragent import UserAgent
 import time
 
-
 USER_AGENT = UserAgent().chrome
 MAIN_URL = "https://www.regard.ru"
 FIRST_PARSING_PAGE = 'https://www.regard.ru/catalog/filter/?id=NDAwMDsyLDMwMDAwLTYwMDAwLA=='
+
 
 class Parser:
     def __init__(self, first_parsing_page):
@@ -30,7 +30,6 @@ class Parser:
         html_doc = BeautifulSoup(responce.content, features="html.parser")
         video_cards_info = html_doc.find_all("div", {"class": "block"})
         self.parsing_page(video_cards_info=video_cards_info)
-
 
     def parsing_page(self, video_cards_info):
         for video_card_info in video_cards_info:
@@ -67,6 +66,8 @@ class Parser:
 
 
 log = logging.getLogger('log_parsing')
+
+
 def logging_configurate():
     file_handler = logging.FileHandler(filename="log_messege.txt", encoding="utf-8", mode="a")
     formater_for_file_write = logging.Formatter("%(asctime)s %(levelname)s %(message)s", "%d-%m-%Y %H:%M")

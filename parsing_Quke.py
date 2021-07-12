@@ -9,7 +9,6 @@ from send_messang import send_massage
 from fake_useragent import UserAgent
 import time
 
-
 USER_AGENT = UserAgent().chrome
 MAIN_URL = "https://quke.ru/shop"
 FIRST_PARSING_PAGE = 'https://quke.ru/shop/komplektuushie-dlya-pk/videokarty?availability=instock&pfrom=' \
@@ -32,7 +31,6 @@ class Parser:
         html_doc = BeautifulSoup(responce.content, features="html.parser")
         video_cards_info = html_doc.find_all("div", {"class": "catalog2__content-col"})
         self.parsing_page(video_cards_info=video_cards_info)
-
 
     def parsing_page(self, video_cards_info):
         for video_card_info in video_cards_info:
